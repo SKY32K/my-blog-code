@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maomy的Code網站</title>
+    <link rel="icon" href="icon.jpg" type="image/jpg" />
+    <meta name="description" content="快來白嫖我的免費軟體、免費程式、免費.....">
+    <meta property="og:image" content="https://swnoob.code.eee.cloudns.ch/icon.jpg">
+    <style>
+        body {
+            background-color: #2e2e2e;
+            color: #f8f8f2;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        #repo-container {
+            width: 80%;
+            background-color: #1e1e1e;
+            border: 1px solid #555;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+        h1 {
+            color: #66d9ef;
+        }
+        a {
+            color: #66d9ef;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .repo {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #2a2a2a;
+            border-radius: 5px;
+        }
+        .repo-name {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>嗨，歡迎來到我的網站</h1>
+    <p>這裡會自動同步我在GitHub上的專案</p>
+    <p>點進入就可以查看了</p>
+    <div id="repo-container">載入中...</div>
+
+    <script>
+        async function fetchGitHubRepos(username) {
+            const url = `https://api.github.com/users/${username}/repos`;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('網路怪怪的 ' + response.statusText);
+                }
+                const repos = await response.json();
+                const container = document.getElementById('repo-container');
+                container.innerHTML = '';  // Clear the loading message
+                if (repos.length === 0) {
+                    container.textContent = '未找到專案。';
+                } else {
+                    repos.forEach(repo => {
+                        const repoElement = document.createElement('div');
+                        repoElement.className = 'repo';
+                        repoElement.innerHTML = `
+                            <div class="repo-name">${repo.name}</div>
+                            <div><a href="${repo.html_url}" target="_blank">進入</a></div>
+                        `;
+                        container.appendChild(repoElement);
+                    });
+                }
+            } catch (error) {
+                document.getElementById('repo-container').textContent = 'Error fetching repositories: ' + error;
+            }
+        }
+
+        // 使用你的GitHub用戶名
+        const username = 'SKY32K';  // Replace with your GitHub username
+        fetchGitHubRepos(username);
+    </script>
+  <a href="https://github.com/skywars-noob/code_web">使用SW Noob的開源網頁專案</a>
+</body>
+</html>
